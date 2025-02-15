@@ -44,3 +44,48 @@ void variables() {
   // final_name = 'Steve'; Error
 }
 
+enum StrokeCap {
+  round,
+  square,
+  butt;
+}
+
+class Paint {
+  String color = "red";
+  StrokeCap strokeCap = StrokeCap.square;
+  double strokeWidth = 1.0;
+
+  String toString() {
+    return 'Paint(color: $color, strokeCap: $strokeCap, strokeWidth: $strokeWidth)';
+  }
+}
+
+void operators() {
+  // Swift와 다르거나 모르는 내용만 정리
+
+  assert(5 ~/ 2 == 2); // ~/: 나누고, 정수 결과 반환
+
+  var value = 2;
+  int? null_value;
+  null_value ??= value; // ??= null_value가 null일 경우에만 할당
+
+  // Cascade notation
+  // Swift의 method chaining과 유사
+  var paint = Paint()
+    ..color = "blue"
+    ..strokeCap = StrokeCap.butt
+    ..strokeWidth = 2.0;
+  print(paint);
+
+  // Spread operators
+  var a = [1, 2, 3];
+  var b = [4, 5, 6];
+  var c = [...a, ...b];
+  print(c);
+
+  // Conditional subscript
+  List<int>? fooList;
+  print(fooList?[0]);
+  fooList = [1, 2, 3];
+  print(fooList?[0]);
+}
