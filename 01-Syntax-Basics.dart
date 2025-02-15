@@ -2,7 +2,8 @@ import 'dart:math';
 
 void main() {
   // variables();
-  operators();
+  // operators();
+  metadata();
 }
 
 void variables() {
@@ -88,4 +89,29 @@ void operators() {
   print(fooList?[0]);
   fooList = [1, 2, 3];
   print(fooList?[0]);
+}
+
+class Television {
+  /// Use [turnOn] to turn on the television instead.
+  @Deprecated('Use turnOn() instead.')
+  void activate() {}
+  void turnOn() {
+    print('Turn on');
+  }
+}
+
+class Todo {
+  final String who;
+  final String what;
+
+  const Todo(this.who, this.what);
+}
+
+@Todo('Bob', 'Implement this')
+void doSomething() {
+  print('Do something');
+}
+
+void metadata() {
+  doSomething();
 }
