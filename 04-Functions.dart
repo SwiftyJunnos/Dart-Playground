@@ -59,3 +59,7 @@ void generators() async {
 
   await asyncNaturalsTo(5).forEach(print);
 }
+
+// External function
+// 외부 라이브러리나 외부 언어의 함수를 명시적으로 선언
+external void someFunc(int i);
