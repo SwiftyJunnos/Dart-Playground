@@ -39,3 +39,23 @@ void functions() {
   print(add2(3));
 }
 
+void generators() async {
+  // Generator
+  // 1. Synchronous Generator
+  // body를 sync*로 표시, yield로 값 생성
+  Iterable<int> naturalsTo(int n) sync* {
+    int k = 0;
+    while (k < n) yield k++;
+  }
+
+  naturalsTo(5).forEach(print);
+
+  // 2. Asynchronous Generator
+  // async*로 표시, yield로 값 생성
+  Stream<int> asyncNaturalsTo(int n) async* {
+    int k = 0;
+    while (k < n) yield k++;
+  }
+
+  await asyncNaturalsTo(5).forEach(print);
+}
