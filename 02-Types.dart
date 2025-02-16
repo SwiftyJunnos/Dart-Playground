@@ -1,7 +1,8 @@
 void main() {
   // records();
   // collections();
-  generics();
+  // generics();
+  typedefs();
 }
 
 void records() {
@@ -90,4 +91,11 @@ void generics() {
 
   var nameSet = Set<String>.from(['John', 'Jane']);
   print(nameSet);
+}
+
+typedef IntList = List<int>;
+
+void typedefs() {
+  var intList = IntList.from([1, 2, 3]);
+  print(intList);
 }
