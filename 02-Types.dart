@@ -1,6 +1,7 @@
 void main() {
   // records();
-  collections();
+  // collections();
+  generics();
 }
 
 void records() {
@@ -58,4 +59,35 @@ void collections() {
   var listOfInts = [1, 2, 3];
   var listOfStrings = ['#0', for (var i in listOfInts) '#$i'];
   print(listOfStrings); // ['#0', '#1', '#2', '#3']
+}
+
+// Swift의 Generics와 유사 `extends` = `where`
+abstract class Cache<T extends Comparable> {
+  T getByKey(String key);
+  void setByKey(String key, T value);
+}
+
+class StringCache extends Cache<String> {
+  Map<String, String> storage = {};
+
+  String getByKey(String key) {
+    return 'value';
+  }
+
+  void setByKey(String key, String value) {
+    storage[key] = value;
+  }
+
+  String toString() {
+    return storage.toString();
+  }
+}
+
+void generics() {
+  var stringCache = StringCache();
+  stringCache.setByKey('k1', 'Steve');
+  print(stringCache);
+
+  var nameSet = Set<String>.from(['John', 'Jane']);
+  print(nameSet);
 }
