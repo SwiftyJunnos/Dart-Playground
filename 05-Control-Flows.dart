@@ -1,5 +1,6 @@
 void main() {
-  loops();
+  // loops();
+  branches();
 }
 
 class Candidate {
@@ -35,4 +36,41 @@ void loops() {
   candidates
       .where((c) => c.yearExperience >= 3)
       .forEach((c) => print('${c.name} - ${c.yearExperience}'));
+}
+
+class Point {
+  int x;
+  int y;
+
+  Point(this.x, this.y);
+
+  String toString() => 'Point($x, $y)';
+}
+
+void branches() {
+  List<int> pair = [2, 3];
+
+  Point? convert(List<int> pair) {
+    // if-case pattern matching
+    if (pair case [int x, int y])
+      return Point(x, y);
+    else
+      return null;
+  }
+
+  var p = convert(pair);
+  print(p);
+
+  const command = 'MOVE';
+  switch (command) {
+    case 'OPEN':
+      print('OPEN');
+      continue newCase; // newCase에서 이어서 case 검사
+    case 'DENIED':
+    case 'CLOSED':
+      print('WILL NOT OPEN');
+    newCase:
+    case 'PENDING':
+      print('PENDING');
+  }
 }
