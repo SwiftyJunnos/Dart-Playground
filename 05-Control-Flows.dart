@@ -1,6 +1,7 @@
 void main() {
   // loops();
-  branches();
+  // branches();
+  errorHandlings();
 }
 
 class Candidate {
@@ -72,5 +73,33 @@ void branches() {
     newCase:
     case 'PENDING':
       print('PENDING');
+  }
+}
+
+void errorHandlings() {
+  void e1() {
+    throw FormatException('Expected at least 1 section');
+  }
+
+  void e2() {
+    // Arbitary throw
+    throw 'Expected at least 1 section';
+  }
+
+  // throw도 expression
+  void e3() => throw UnimplementedError();
+
+  try {
+    e1();
+    e2();
+    e3();
+  } on UnimplementedError catch (e) {
+    print('Please implement this function: $e');
+  } catch (e, s) {
+    print(e);
+    print('Stack trace: $s');
+  } finally {
+    // 에러의 발생 여부오 상관 없이 실행
+    print('Clean up');
   }
 }
