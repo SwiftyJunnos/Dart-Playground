@@ -131,3 +131,20 @@ class Employee extends Person {
     print('in Employee');
   }
 }
+
+class Rectangle {
+  double left, top, width, height;
+
+  Rectangle(this.left, this.top, this.width, this.height);
+
+  // getter - setter
+  double get right => left + width;
+  set right(double value) => left = value - width;
+  double get bottom => top + height;
+  set bottom(double value) => top = value - height;
+}
+
+// 추상화
+abstract class Doer {
+  void doSomething();
+}
