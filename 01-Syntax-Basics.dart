@@ -74,6 +74,9 @@ void operators() {
 
   // Cascade notation
   // Swift의 method chaining과 유사
+  // 정정: Cascade notation은 Method Chaining과 다른 개념이다.
+  // Cascade notation은 "독립적으로" 같은 객체를 참조하며, 메서드 호출이나 프로퍼티 접근을 수행할 수 있다.
+  // 즉, ..draw()와 같은 메서드 호출은 호출 자체는 되지만, 해당 호출의 반환값이 다음 라인에 chain 되지는 않는다.
   var paint = Paint()
     ..color = "blue"
     ..strokeCap = StrokeCap.butt
