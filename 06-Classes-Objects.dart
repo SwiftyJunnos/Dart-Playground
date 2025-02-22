@@ -1,8 +1,7 @@
-import 'dart:math';
-
 void main() {
   // classes();
-  constructors();
+  // constructors();
+  abstracts();
 }
 
 class SomeClass {}
@@ -50,12 +49,12 @@ class Point {
 
   Point(this.x, this.y); // Generative Constructor
   Point.origin() // Named Constructor
-      : x = xOrigin,
-        y = yOrigin;
+    : x = xOrigin,
+      y = yOrigin;
   Point.alongXAxis(double x) : this(x, 0); // Forwarding Constructor
   Point.fromJson(Map<String, double> json) // Initializer list
-      : x = json['x']!, // 이 인스턴스 변수들은 body가 실행되기 전에 초기화된다. this 사용 불가능
-        y = json['y']! {
+    : x = json['x']!, // 이 인스턴스 변수들은 body가 실행되기 전에 초기화된다. this 사용 불가능
+      y = json['y']! {
     print('In Point.fromJson(): $x, $y'); // 인스턴스 변수 초기화 후에 실행
   }
   Point.withAssert(this.x, this.y) : assert(x >= 0) {
@@ -148,3 +147,239 @@ class Rectangle {
 abstract class Doer {
   void doSomething();
 }
+
+class A {
+  // 존재하지 않는 변수나 메서드를 사용하려고 할 때 호출된다.
+  // override하지 않으면 NoSuchMethodError 발생
+  @override
+  void noSuchMethod(Invocation invocation) {
+    print(
+      'You tried to use a non-existent member: '
+      '${invocation.memberName}',
+    );
+  }
+}
+
+// Mixin
+// 추상화 - Swift의 protocol과 유사
+mixin Musical {
+  bool canPlayPiano = false;
+  bool canCompose = false;
+  bool canConduct = false;
+
+  void entertain();
+
+  // Swift의 protocol과 달리 기본 구현도 가능
+  // → Swift의 extension을 통한 기본 구현과 유사
+  void entertainMe() {
+    if (canPlayPiano) {
+      print('Playing piano');
+    } else if (canConduct) {
+      print('Waving hands');
+    } else {
+      print('Humming to self');
+    }
+  }
+}
+
+mixin Aggressive {
+  bool canFight = true;
+}
+
+// 추상화
+// 기본 구현이 불가능한 추상화 형태
+abstract interface class Tuner {
+  void tuneInstrument() {
+    print("Hello");
+  }
+}
+
+// on을 사용하면 mixin에서도 class를 상속받아 super로 부모 클래스에 접근 가능
+mixin TunerMixin on Tuner {
+  @override
+  void tuneInstrument() {
+    super.tuneInstrument();
+  }
+}
+
+class Musician with Musical, Aggressive implements Tuner {
+  @override
+  void entertain() {
+    if (canFight) {
+      print("Fight");
+    } else {
+      print("Play");
+    }
+  }
+
+  @override
+  void tuneInstrument() {
+    print('Tuning instrument');
+  }
+
+  Musician();
+}
+
+// mixin class는 mixin이지만, 클래스로도 사용 가능
+mixin class Musician2 {}
+
+void abstracts() {
+  var musician = Musician();
+  musician.canPlayPiano = true;
+  musician.entertainMe();
+  musician.entertain();
+
+  musician.canFight = false;
+  musician.entertain();
+}
+
+class ParentClass {
+  void walk() {
+    print('Walking');
+  }
+}
+
+class ChildClass implements ParentClass {
+  @override
+  void walk() {
+    print('Walking');
+  }
+}
+
+class Child2Class extends ParentClass {
+  @override
+  void walk() {
+    super.walk();
+  }
+}
+
+/// mixin 예시
+
+mixin ValidationMixin {
+  final RegExp _emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-](2,4)$');
+
+  bool validateEmail(String email) => _emailRegex.hasMatch(email);
+
+  void showValidation() => print('Invalid Input!');
+}
+
+class UserForm with ValidationMixin {
+  void submitForm(String email) {
+    if (validateEmail(email)) {
+      //
+    } else {
+      showValidation();
+    }
+  }
+}
+
+/// mixin class 예시
+
+mixin class CacheManager {
+  final Map<String, dynamic> _cache = {};
+
+  void store(String key, dynamic value) => _cache[key] = value;
+
+  dynamic retrieve(String key) => _cache[key];
+}
+
+class NetworkService extends CacheManager {
+  Future<dynamic> fetchData(String key) async {
+    final result = await retrieve(key);
+    return result;
+  }
+}
+
+class LocalDBStorage with CacheManager {
+  Future<dynamic> fetchData(String key) async {
+    final result = await retrieve(key);
+    return result;
+  }
+}
+
+/// abstract class 예시
+
+abstract class DataRepository {
+  Future<List<dynamic>> fetchAll();
+
+  Future<void> delete(String id);
+
+  void logOperation(String action) {
+    print('${DateTime.now()}: $action performed');
+  }
+}
+
+class APIRepository extends DataRepository {
+  @override
+  Future<List<dynamic>> fetchAll() async {
+    // Implement fetchAll logic here
+    return [];
+  }
+
+  @override
+  Future<void> delete(String id) async {
+    // Implement delete logic here
+  }
+}
+
+/// interface class 예시
+
+class Gateway {
+  void process() {}
+}
+
+interface class PaymentGateway {
+  void processPayment(double amount) {}
+  void refundPayment(String transactionID) {}
+}
+
+class BankGateway extends PaymentGateway {}
+
+void interfaceClasses() {
+  var gateway = PaymentGateway();
+}
+
+// https://miro.medium.com/v2/resize:fit:1400/format:webp/1*Y2RRXyRwfazdWDUpsPcmew.png
+// 1. mixin
+//   - Swift의 protocol과 유사
+//   - 인스턴스화 불가능
+//   - 채택하는 쪽에서는 with로 여러 개의 mixin 사용 가능
+//   - abstract + 기본 구현
+//   - 다른 mixin을 with로 채택하는 것은 불가능 (1-depth)
+//
+// 2. mixin class
+//   - mixin으로 사용 가능한 클래스
+//   - 클래스이지만 mixin처럼 with를 사용해 채택도 가능
+//   - 클래스이기 때문에 메서드들은 body를 가지고 구현되어야 함
+//   - 단독적으로 초기화되어 인스턴스로서 사용되지 못하는 클래스
+//
+// 3. abstract class
+//   - 추상화
+//   - 기본 구현이 불가능한 추상화 형태
+//   - `extends`와 `implements` 모두 가능하다.
+//   - 메서드는 body를 가지는 구현체일 수도 있고, 갖지 않는 추상체일 수도 있다.
+//
+// 4. interface class
+//   - 추상화 클래스
+//   - 모든 abstract 메서드들을 구현해야 한다.
+//   - `implements` 만 될 수 있다. (`extends` 불가능)
+//   - 메서드는 body를 가지는 구현체여야 한다.
+//
+// 5. abstract interface class
+//   - 추상화 클래스
+//   - `implements` 만 가능하다. (`extends` 불가능)
+//   - 메서드는 body를 가지는 구현체일 수도 있고, 갖지 않는 추상체일 수도 있다.
+//
+// interface와 abstract
+// interface
+//   - implemented만 될 수 있음 (extended 될 수 없음)
+//   - 메서드에 body를 제공할 수 있음
+//   - 인스턴스화 될 수 있음
+// abstract interface
+//   - implemented만 될 수 있음 (extended 될 수 없음)
+//   - 메서드에 body를 제공할 수 있음
+//   - 인스턴스화 될 수 없음
+// abstract
+//   - extended, implemented 될 수 있음
+//   - 메서드에 body를 제공할 수 있음
+//   - 인스턴스화 될 수 없음
