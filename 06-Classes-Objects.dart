@@ -3,7 +3,8 @@ void main() {
   // constructors();
   // abstracts();
   // enums();
-  extensions();
+  // extensions();
+  extensionTypes();
 }
 
 class SomeClass {}
@@ -465,4 +466,41 @@ void extensions() {
   final stringNumber = '123';
   final number = stringNumber.parseInt();
   assert(number == 123);
+}
+
+// extension type
+// 기존에 존재하는 타입에 extension으로 기능 추가
+// e.g. int를 사용하는 ID 값에 값 변경을 막겠다면 아래와 같이 비교 연산자만 정의하여 사용할 수 있도록 제한 가능
+//
+// 이 때, 내부적으로 사용되는 '원래'의 타입은 representation 타입이라 부른다.
+extension type IdNumber(int id) {
+  operator <(IdNumber other) => id < other.id;
+}
+
+// implements를 통해
+// 1. subtype과의 관계를 설명하거나
+// 2. extension type에 representation 타입의 멤버를 사용할 수 있도록 인터페이스를 제공
+// 할 수 있다.
+//
+// NumberI는 int의 모든 멤버 + body에 구현된 멤버를 사용할 수 있다.
+extension type NumberI(int i) implements int {}
+
+// representation 타입의 부모 타입의 멤버를 사용할 수 있다.
+extension type Sequence<T>(List<T> _) implements Iterable<T> {}
+
+// @redeclare를 통해 부모 클래스의 멤버를 재정의 가능
+//
+// @redeclare를 사용하려면 meta 패키지를 import 해야한다.
+// import 'package:meta/meta.dart'
+extension type MyString(String _) implements String {
+  // @redeclare
+  int operator [](int index) => codeUnitAt(index);
+}
+
+void extensionTypes() {
+  var safeID = IdNumber(42424242);
+  // safeID + 10; // Error: No '+' operator.
+  // int myUnsafeID = safeID; // Error: Wrong type
+  int myUnsafeID = safeID as int; // OK: representation 타입으로 캐스팅 가능
+  assert(safeID < IdNumber(42424241)); // OK: 비교 연산자가 정의되어 있으므로 사용 가능
 }
