@@ -2,7 +2,8 @@ void main() {
   // classes();
   // constructors();
   // abstracts();
-  enums();
+  // enums();
+  extensions();
 }
 
 class SomeClass {}
@@ -443,4 +444,25 @@ void enums() {
   for (final color in Color.values) {
     print(color.name);
   }
+}
+
+// 기존의 API에 extension으로 기능 추가 가능
+// extension EXT_NAME on EXTENDING_TYPE
+extension NumberParsing on String {
+  int parseInt() {
+    return int.parse(this);
+  }
+}
+
+// Unnamed extension
+// EXT_NAME은 생략 가능
+extension on String {}
+
+// Generic extension
+extension MyFancyList<T> on List<T> {}
+
+void extensions() {
+  final stringNumber = '123';
+  final number = stringNumber.parseInt();
+  assert(number == 123);
 }
