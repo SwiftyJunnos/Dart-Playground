@@ -1,7 +1,8 @@
 void main() {
   // classes();
   // constructors();
-  abstracts();
+  // abstracts();
+  enums();
 }
 
 class SomeClass {}
@@ -383,3 +384,63 @@ void interfaceClasses() {
 //   - extended, implemented 될 수 있음
 //   - 메서드에 body를 제공할 수 있음
 //   - 인스턴스화 될 수 없음
+
+// 모든 enum은 `Enum` 클래스를 상속받는다.
+// 이 때, `Enum` 클래스는 sealed class이다.
+enum Color { red, green, blue }
+
+// enum은 확장하여 일반적인 class처럼도 사용할 수 있다.
+enum Vehicle implements Comparable<Vehicle> {
+  car(tires: 4, passengers: 5, carbonPerKilometer: 400),
+  bus(tires: 6, passengers: 50, carbonPerKilometer: 800),
+  bicycle(tires: 2, passengers: 1, carbonPerKilometer: 0);
+
+  // Generative Constructor는 `const`여야 한다.
+  const Vehicle({
+    required this.tires,
+    required this.passengers,
+    required this.carbonPerKilometer,
+  });
+
+  // Enum은 컴파일 타임에 모두 정의되어 있어야 한다. (dynamic instantiate 불가능)
+  factory Vehicle.fromMap(Map<String, dynamic> map) {
+    final int tires = map['tires'] as int;
+    final int passengers = map['passengers'] as int;
+    final int carbonPerKilometer = map['carbonPerKilometer'] as int;
+
+    // 이미 정의되어 있는 values 중 일치하는 값 탐색
+    return Vehicle.values.firstWhere(
+      (vehicle) =>
+          vehicle.tires == tires &&
+          vehicle.passengers == passengers &&
+          vehicle.carbonPerKilometer == carbonPerKilometer,
+      orElse: () => throw ArgumentError('No matching vehicle found'),
+    );
+  }
+
+  // 인스턴스 변수들은 final이어야 한다.
+  final int tires;
+  final int passengers;
+  final int carbonPerKilometer;
+
+  int get carbonFootprint => (carbonPerKilometer / passengers).round();
+
+  bool get isTwoWheeled => this == Vehicle.bicycle;
+
+  @override
+  int compareTo(Vehicle other) => carbonPerKilometer - other.carbonPerKilometer;
+}
+
+void enums() {
+  final favoriteColor = Color.blue;
+  if (favoriteColor == Color.blue) {
+    print('Your favorite color is blue!');
+  }
+
+  // Dart의 enum은 순서를 가진다. (values의 순서와 동일)
+  assert(Color.blue.index == 2);
+
+  for (final color in Color.values) {
+    print(color.name);
+  }
+}
