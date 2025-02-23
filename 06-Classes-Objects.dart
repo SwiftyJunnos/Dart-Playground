@@ -4,7 +4,8 @@ void main() {
   // abstracts();
   // enums();
   // extensions();
-  extensionTypes();
+  // extensionTypes();
+  callableObjects();
 }
 
 class SomeClass {}
@@ -503,4 +504,16 @@ void extensionTypes() {
   // int myUnsafeID = safeID; // Error: Wrong type
   int myUnsafeID = safeID as int; // OK: representation 타입으로 캐스팅 가능
   assert(safeID < IdNumber(42424241)); // OK: 비교 연산자가 정의되어 있으므로 사용 가능
+}
+
+// Python의 __call__, Swift의 callAsFunction과 마찬가지로
+// 클래스를 메서드와 같이 호출할 수 있도록 만들 수 있다.
+class Upperer {
+  String call(String input) => input.toUpperCase();
+}
+
+void callableObjects() {
+  Upperer upper = Upperer();
+  String result = upper('hello');
+  assert(result == 'HELLO');
 }
